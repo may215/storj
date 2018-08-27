@@ -198,9 +198,8 @@ func EnsureRedis(t *testing.T) (_ RedisDone) {
 			if err != nil {
 				log.Fatalf("Failed to request flush of existing redis keys: error %s\n", err)
 			}
-			var n int
 			b := make([]byte, 5)
-			n, err = conn.Read(b)
+			n, err := conn.Read(b)
 			if err != nil {
 				log.Fatalf("Failed to flush existing redis keys: error %s\n", err)
 			}

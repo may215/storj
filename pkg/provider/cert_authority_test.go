@@ -10,6 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var ctx = context.Background()
+
 func TestNewCA(t *testing.T) {
 	expectedDifficulty := uint16(4)
 
@@ -22,30 +24,29 @@ func TestNewCA(t *testing.T) {
 }
 
 func BenchmarkNewCA_Difficulty8_Concurrency1(b *testing.B) {
-	context.Background()
 	for i := 0; i < b.N; i++ {
 		expectedDifficulty := uint16(8)
-		NewCA(context.Background(), expectedDifficulty, 1)
+		NewCA(ctx, expectedDifficulty, 1)
 	}
 }
 
 func BenchmarkNewCA_Difficulty8_Concurrency2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		expectedDifficulty := uint16(8)
-		NewCA(context.Background(), expectedDifficulty, 2)
+		NewCA(ctx, expectedDifficulty, 2)
 	}
 }
 
 func BenchmarkNewCA_Difficulty8_Concurrency5(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		expectedDifficulty := uint16(8)
-		NewCA(context.Background(), expectedDifficulty, 5)
+		NewCA(ctx, expectedDifficulty, 5)
 	}
 }
 
 func BenchmarkNewCA_Difficulty8_Concurrency10(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		expectedDifficulty := uint16(8)
-		NewCA(context.Background(), expectedDifficulty, 10)
+		NewCA(ctx, expectedDifficulty, 10)
 	}
 }
