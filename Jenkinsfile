@@ -9,21 +9,18 @@ node('node') {
     }
 
     stage('Build Images') {
-      sh 'make test-docker images'
-
-      echo "Current build result: ${currentBuild.result}"
-    }
-
-    stage('Push Images') {
-      if (env.BRANCH_NAME == "master") {
-        echo 'Push to Repo'
-        sh 'make push-images'
-      }
+      sh 'make test-docker test-captplanet-docker images'
 
       echo "Current build result: ${currentBuild.result}"
     }
 
     if (env.BRANCH_NAME == "master") {
+      stage('Push Images') {
+        echo 'Push to Repo'
+        sh 'make push-images'
+        echo "Current build result: ${currentBuild.result}"
+      }
+
       /* This should only deploy to staging if the branch is master */
       stage('Deploy') {
         sh 'make deploy'
