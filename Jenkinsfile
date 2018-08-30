@@ -48,13 +48,17 @@ pipeline {
   }
   post {
     failure {
-      echo "Caught errors! ${err}"
-      echo "Setting build result to FAILURE"
-      currentBuild.result = "FAILURE"
+      steps {
+        echo "Caught errors! ${err}"
+        echo "Setting build result to FAILURE"
+        currentBuild.result = "FAILURE"
+      }
     }
     cleanup {
-      sh 'make test-docker-clean clean-images'
-      deleteDir()
+      steps {
+        sh 'make test-docker-clean clean-images'
+        deleteDir()
+      }
     }
   }
 }
