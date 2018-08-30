@@ -23,28 +23,32 @@ pipeline {
       }
     }
 
-    if (env.BRANCH_NAME == "master") {
-      stage('Push Images') {
-        echo 'Push to Repo'
-        sh 'make push-images'
-        echo "Current build result: ${currentBuild.result}"
+    stage('Push Images') {
+      when {
+        branch 'master'
       }
+      echo 'Push to Repo'
+      sh 'make push-images'
+      echo "Current build result: ${currentBuild.result}"
+    }
 
-      /* This should only deploy to staging if the branch is master */
-      stage('Deploy') {
-        sh 'make deploy'
-        echo "Current build result: ${currentBuild.result}"
+    /* This should only deploy to staging if the branch is master */
+    stage('Deploy') {
+      when {
+        branch 'master'
       }
+      sh 'make deploy'
+      echo "Current build result: ${currentBuild.result}"
     }
 
   }
   post {
-    error {
+    failure {
       echo "Caught errors! ${err}"
       echo "Setting build result to FAILURE"
       currentBuild.result = "FAILURE"
     }
-    always {
+    cleanup {
       sh 'make test-docker-clean clean-images'
       deleteDir()
     }
