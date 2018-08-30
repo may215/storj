@@ -82,8 +82,7 @@ test: lint
 	go test -race -v -covermode=atomic -coverprofile=coverage.out ./...
 	go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 sh -c
 	gover
-	[ ! -d /host ] || cp gover.coverprofile /host
-	@echo done
+	@[ -z "$$COVERALLS_TOKEN" ] && echo "Skipping submission to coveralls.io" || goveralls -coverprofile=gover.coverprofile
 
 build-binaries:
 	docker build -t satellite .
@@ -128,7 +127,6 @@ clean-local:
 test-docker:
 	docker-compose up -d --remove-orphans test
 	docker-compose run test make test
-	[ -z "$$COVERALLS_TOKEN" ] && echo "Skipping submission to coveralls.io" || goveralls -coverprofile=gover.coverprofile
 
 test-docker-clean:
 	-docker-compose down --rmi all
